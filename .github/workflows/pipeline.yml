@@ -1,0 +1,43 @@
+name: Static website Deployment
+
+on:
+  push:                                       #Pipeline Triggers on push event on master branch
+    branches:
+      - master
+
+jobs:
+  terraform_fmt:
+    name: Deploy Site
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repo                   #Checkout repo on github runners
+      uses: actions/checkout@v1
+
+    - name: Terraform Init                  #Initialize the terraform repo
+      uses: hashicorp/terraform-github-actions/init@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TF_ACTION_WORKING_DIR: 'terraform'
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Terraform Validate              #Validates the configuration files in a directory
+      uses: hashicorp/terraform-github-actions/validate@v0.3.7
+
+    - name: Terraform Apply                 #Applies the configuration files in a directory
+      uses: hashicorp/terraform-github-actions/apply@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TF_ACTION_WORKING_DIR: 'terraform'
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Sync S3                         #Sync the static website code to aws s3 bucket
+      uses: jakejarvis/s3-sync-action@master
+      env:
+        SOURCE_DIR: './src'                 #website code is present in src directory
+        AWS_REGION: 'eu-central-1'
+        AWS_S3_BUCKET: '[YOUR_BUCKET_NAME_HERE]'
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
