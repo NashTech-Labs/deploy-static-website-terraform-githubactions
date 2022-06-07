@@ -1,13 +1,4 @@
 # Deploy static website with terraform & GithubActions
-## Overview 
-
-├── src
-│   └── // Your website code will go here.
-├── .github
-│   └── workflows
-│       └── // Your Github Actions code will go here
-└── terraform
-    └── // Your Terraform code will go here
 
 ## Pre-requisites
 
