@@ -1,6 +1,6 @@
 # Deploy static website with terraform & GithubActions
 ## Overview 
-.
+
 ├── src
 │   └── // Your website code will go here.
 ├── .github
@@ -8,6 +8,7 @@
 │       └── // Your Github Actions code will go here
 └── terraform
     └── // Your Terraform code will go here
+
 ## Pre-requisites
 
 - Gather your AWS Credentials AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY from console.
